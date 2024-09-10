@@ -1,28 +1,53 @@
 import { useState, useEffect } from "react";
 
+const lessons = [
+  {
+    id: 1,
+    name: "ReactJS là gì? Tại sao nên học ReactJS",
+  },
+  {
+    id: 2,
+    name: "SPA/MPA là gì?",
+  },
+  {
+    id: 3,
+    name: "Arrow function",
+  },
+];
+
 function Content() {
-  const [avatar, setAvatar] = useState();
+  const [lessonId, setLessonId] = useState();
 
   useEffect(() => {
+    const handleComment = (e) => {
+      console.log(e);
+    };
 
-    return () =>{
-      avatar && URL.revokeObjectURL(avatar.preview)
-    }
+     window.addEventListener(`lesson-${lessonId}`, handleComment);
 
-  },[avatar]);
-
-  const handleSetAvatar = (e) => {
-    const file = e.target.files[0];
-
-    file.preview = URL.createObjectURL(file);
-
-    setAvatar(file);
-  };
+    return () => {
+      window.removeEventListener(
+        `lesson-${lessonId}`,
+        handleComment
+      );
+    };
+  }, [lessonId]);
 
   return (
     <div style={{ padding: 50 }}>
-      <input type="file" onChange={handleSetAvatar} />
-      {avatar && <img src={avatar.preview} alt="" width="80%" />}
+      <ul>
+        {lessons.map((lesson) => (
+          <li
+            key={lesson.id}
+            style={{
+              color: lessonId === lesson.id ? "red" : "#333",
+            }}
+            onClick={() => setLessonId(lesson.id)}
+          >
+            {lesson.name}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
