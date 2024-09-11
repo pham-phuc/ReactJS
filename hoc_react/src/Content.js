@@ -1,53 +1,21 @@
-import { useState, useEffect } from "react";
-
-const lessons = [
-  {
-    id: 1,
-    name: "ReactJS là gì? Tại sao nên học ReactJS",
-  },
-  {
-    id: 2,
-    name: "SPA/MPA là gì?",
-  },
-  {
-    id: 3,
-    name: "Arrow function",
-  },
-];
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 
 function Content() {
-  const [lessonId, setLessonId] = useState();
-
-  useEffect(() => {
-    const handleComment = (e) => {
-      console.log(e);
-    };
-
-     window.addEventListener(`lesson-${lessonId}`, handleComment);
-
-    return () => {
-      window.removeEventListener(
-        `lesson-${lessonId}`,
-        handleComment
-      );
-    };
-  }, [lessonId]);
-
+  const [count, setCount] = useState(60);
+  let timerId = useRef();
+  const handleStart = () => {
+    timerId.current = setInterval(() => {
+      setCount((prev) => prev - 1);
+    }, 1000);
+  };
+  const handleStop = () => {
+    clearInterval(timerId.current);
+  };
   return (
     <div style={{ padding: 50 }}>
-      <ul>
-        {lessons.map((lesson) => (
-          <li
-            key={lesson.id}
-            style={{
-              color: lessonId === lesson.id ? "red" : "#333",
-            }}
-            onClick={() => setLessonId(lesson.id)}
-          >
-            {lesson.name}
-          </li>
-        ))}
-      </ul>
+      <h1>{count}</h1>
+      <button onClick={handleStart}>Start</button>
+      <button onClick={handleStop}>Stop</button>
     </div>
   );
 }
